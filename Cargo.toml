@@ -1,0 +1,15 @@
+[package]
+name = "tokio-wifiscanner"
+version = "0.1.0"
+authors = ["Michał Mania <micmania90@gmail.com>"]
+edition = "2018"
+description = "List WiFi hotspots in your area"
+repository = "https://github.com/mic90/tokio-wifiscanner"
+documentation = "https://docs.rs/tokio-wifiscanner"
+readme = "README.md"
+keywords = ["wifi","hotspots","network","tokio"]
+license = "Apache-2.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
