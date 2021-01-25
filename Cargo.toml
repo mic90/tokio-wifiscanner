@@ -1,6 +1,6 @@
 [package]
 name = "tokio-wifiscanner"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Michał Mania <micmania90@gmail.com>"]
 edition = "2018"
 description = "List WiFi hotspots in your area"
