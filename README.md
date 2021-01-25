@@ -9,7 +9,7 @@ used by adding `tokio-wifiscanner` to the dependencies in your project's `Cargo.
 
 ```toml
 [dependencies]
-tokio-wifiscanner = "0.1.*"
+tokio-wifiscanner = "0.2.*"
 ```
 
 and this to your crate root:
