@@ -1,10 +1,10 @@
-use regex::Regex;
-
 use crate::{Error, Result, Wifi};
+use regex::Regex;
+use std::vec::Vec;
+use tokio::process::Command;
 
 /// Returns a list of WiFi hotspots in your area - (Windows) uses `netsh`
-pub fn scan() -> Result<Vec<Wifi>> {
-    use tokio::process::Command;
+pub async fn scan() -> Result<Vec<Wifi>> {
     let output = Command::new("netsh.exe")
         .args(&["wlan", "show", "networks", "mode=Bssid"])
         .output()
@@ -12,7 +12,6 @@ pub fn scan() -> Result<Vec<Wifi>> {
         .map_err(|_| Error::CommandNotFound)?;
 
     let data = String::from_utf8_lossy(&output.stdout);
-
     parse_netsh(&data)
 }
 
@@ -32,19 +31,35 @@ fn parse_netsh(network_list: &str) -> Result<Vec<Wifi>> {
         let mut wifi_security = String::new();
 
         for line in block.lines() {
-            if ssid_regex.is_match(line) {
-                wifi_ssid = line.split(":").nth(1).unwrap_or("").trim().to_string();
-            } else if line.find("Authentication").is_some() {
-                wifi_security = line.split(":").nth(1).unwrap_or("").trim().to_string();
-            } else if line.find("BSSID").is_some() {
-                let captures = mac_regex.captures(line).ok_or(Error::SyntaxRegexError)?;
-                wifi_macs.push(captures.get(0).ok_or(Error::SyntaxRegexError)?);
-            } else if line.find("Signal").is_some() {
-                let percent = line.split(":").nth(1).unwrap_or("").trim().replace("%", "");
-                let percent: i32 = percent.parse().map_err(|_| Error::SyntaxRegexError)?;
-                wifi_rssi.push(percent / 2 - 100);
-            } else if line.find("Channel").is_some() {
-                wifi_channels.push(line.split(":").nth(1).unwrap_or("").trim().to_string());
+            if let Some(ssid_match) = ssid_regex.find(line) {
+                wifi_ssid = ssid_match
+                    .as_str()
+                    .split(":")
+                    .nth(1)
+                    .unwrap_or("")
+                    .trim()
+                    .to_string();
+            } else if let Some(auth_line) = line.split(":").next() {
+                wifi_security = auth_line.trim().to_string();
+            } else if line.contains("BSSID") {
+                if let Some(captures) = mac_regex.captures(line) {
+                    // Default to an empty string if no match is found
+                    let mac = captures.get(0).map_or("", |m| m.as_str());
+                    wifi_macs.push(mac.to_string());
+                }
+            } else if line.contains("Signal") {
+                if let Some(percent) = line.split(":").nth(1) {
+                    let rssi = percent
+                        .trim()
+                        .replace("%", "")
+                        .parse::<i32>()
+                        .unwrap_or(-100);
+                    wifi_rssi.push(rssi / 2 - 100);
+                }
+            } else if line.contains("Channel") {
+                if let Some(channel) = line.split(":").nth(1) {
+                    wifi_channels.push(channel.trim().to_string());
+                }
             }
         }
 
