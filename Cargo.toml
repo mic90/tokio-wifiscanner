@@ -1,10 +1,10 @@
 [package]
 name = "tokio-wifiscanner"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Michał Mania <micmania90@gmail.com>"]
 edition = "2018"
 description = "List WiFi hotspots in your area"
-repository = "https://github.com/mic90/tokio-wifiscanner"
+repository = "https://github.com/DJStompZone/tokio-wifiscanner"
 documentation = "https://docs.rs/tokio-wifiscanner"
 keywords = ["wifi","hotspots","network","tokio"]
 readme = "README.md"
@@ -16,10 +16,10 @@ path = "src/examples/main.rs"
 
 [dependencies]
 regex = "1"
-itertools = "0.10.0"
-tokio =  { version = "1.0.2", features = ["process"] }
+itertools = "0.13.0"
+tokio =  { version = "1.28.0", features = ["process"] }
 
 [dev-dependencies]
 regex = "1"
-itertools = "0.10.0"
-tokio =  { version = "1.0.2", features = ["macros", "rt", "process"] }
+itertools = "0.13.0"
+tokio =  { version = "1.28.0", features = ["macros", "rt", "process"] }
