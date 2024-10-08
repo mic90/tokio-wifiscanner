@@ -17,9 +17,9 @@ path = "src/examples/main.rs"
 [dependencies]
 regex = "1"
 itertools = "0.10.0"
-tokio =  { version = "1.0.2", features = ["process"] }
+tokio =  { version = "1.40.0", features = ["process"] }
 
 [dev-dependencies]
 regex = "1"
 itertools = "0.10.0"
-tokio =  { version = "1.0.2", features = ["macros", "rt", "process"] }
+tokio =  { version = "1.40.0", features = ["macros", "rt", "process"] }
